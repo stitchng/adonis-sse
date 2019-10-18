@@ -7,12 +7,12 @@ class EventSourceWatcher {
 
   async handle ({ request, source, session }, next) {
     
-    let middlewareFunc = (req, res, next) => next()
+    let middlewareFunc = (rq, rs, nx) => nx()
     
     try {
       middlewareFunc = this.stream.setup(source);
     } catch (err) {
-      middlewareFunc = (req, res, next) => next()
+      middlewareFunc = (req, res, nex) => nex()
     }
     
     await middlewareFunc(request.request, request.response, next);
