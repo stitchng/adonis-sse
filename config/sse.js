@@ -4,7 +4,7 @@ const Env = use('Env')
 
 module.exports = {
   
-  detect_ie: false,
+  pad_for_ie: false,
   
   compress_output: false,
   
