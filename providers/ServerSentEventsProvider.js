@@ -47,17 +47,13 @@ class ServerSentEventsProvider extends ServiceProvider {
    */
   boot () {
     const HttpContext = this.app.use('Adonis/Src/HttpContext')
-    const Config = this.app.use('Adonis/Src/Config')
-    const QueueManager = this.app.use('Adonis/Src/Queue')
-
-    const Exception = this.app.use('Exception')
 
     /**
      * Adding getter to the HTTP context. Please note the queue
      * instance...
      */
     HttpContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [HTTP]
-      let Source = require('ssenode').Source
+      const Source = require('ssenode').Source
       
       if((this.request.header('Accept') || "").indexOf('text/event-stream') > -1){
           return new Source(require('uuid/v4'))
