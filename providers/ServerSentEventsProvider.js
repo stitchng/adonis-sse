@@ -36,6 +36,11 @@ class ServerSentEventsProvider extends ServiceProvider {
    */
   register () {
     this._registerEventStream()
+    
+    this.app.bind('Adonis/Middleware/EventSourceWatcher', (app) => {
+      let EventSourceWatcher = require('../src/Stream/Middleware/EventSourceWatcher')
+      return new EventSourceWatcher(this.app.use('Adonis/Addon/Stream'))
+    })
   }
 
   /**
