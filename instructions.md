@@ -42,7 +42,7 @@ Route.get('/stream/:browserfingerprint', ({ source, params : { browserfingerprin
         browser_id: browserfingerprint,
         timestamp: Date.now()
       })
-});
+}).middleware(['eventsource']);
 
 ```
 
