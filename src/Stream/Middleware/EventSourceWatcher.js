@@ -12,7 +12,7 @@ class EventSourceWatcher {
     try {
       middlewareFunc = this.stream.setup(source);
     } catch (err) {
-      ;
+      middlewareFunc = (req, res, next) => next()
     }
     
     await middlewareFunc(request.request, request.response, next);
