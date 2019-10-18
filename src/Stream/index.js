@@ -6,7 +6,7 @@ class Stream {
     this._logger = Logger
     this.init = EventStream.init;
     this.options = {
-      detect_ie_and_pad_with_comments: Config.get('sse.detect_ie')
+      detect_ie_and_pad_with_comments: Config.get('sse.pad_for_ie'),
       compress_output: Config.get('sse.compress_output'),
       prefer_event_name: Config.get('sse.prefer_event_name'),
       prefered_event_name: Config.get('sse.prefered_event_name')
