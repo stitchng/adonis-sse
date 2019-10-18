@@ -1,0 +1,68 @@
+{
+  "name": "adonisjs-sse",
+  "version": "0.1.1",
+  "description": "An addon/plugin package to provide server-sent events functionality for AdonisJS 4.0+",
+  "main": "index.js",
+  "files": [
+    "src",
+    "config",
+    "commands",
+    "providers",
+    "instruction.js",
+    "instructions.md",
+    "index.js"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "standard",
+    "pretest": "npm run lint",
+    "test": "nyc node japaFile.js",
+    "test:win": "node ./node_modules/japa-cli/index.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "keywords": [
+    "server-sent events",
+    "event-streaming",
+    "eventsource",
+    "adonisjs"
+  ],
+  "author": "StitchNG <stitchnig@gmail.com> (https://twitter.com/stitchappn)",
+  "license": "MIT",
+  "nyc": {
+    "exclude": [
+      "test"
+    ]
+  },
+  "standard": {
+    "globals": [
+      "use",
+      "test"
+    ]
+  },
+  "dependencies": {
+    "@adonisjs/generic-exceptions": "^2.0.1",
+    "ssenode": "^0.1.0",
+    "debug": "^3.1.2"
+  },
+  "devDependencies": {
+    "japa": "^2.0.5",
+    "japa-cli": "^1.0.1",
+    "nyc": "^13.0.1",
+    "semver": "^5.5.0",
+    "coveralls": "^3.0.2",
+    "standard": "^12.0.1",
+    "@adonisjs/ace": "^5.0.2",
+    "@adonisjs/sink": "^1.0.6",
+    "@adonisjs/fold": "^4.0.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stitchng/adonis-sse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stitchng/adonis-sse/issues"
+  },
+  "homepage": "https://github.com/stitchng/adonis-sse"
+}
