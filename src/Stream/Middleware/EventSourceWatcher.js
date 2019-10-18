@@ -1,14 +1,16 @@
 'use strict'
 
-class SetupEventSourceListeners {
+class EventSourceWatcher {
   constructor (stream) {
     this.stream = stream
   }
 
   async handle ({ request, source, session }, next) {
+    
+    let middlewareFunc = (req, res, next) => next()
+    
     try {
-
-      let middlewareFunc = this.stream.setup(source);
+      middlewareFunc = this.stream.setup(source);
     } catch (err) {
       ;
     }
@@ -18,4 +20,4 @@ class SetupEventSourceListeners {
   }
 }
 
-module.exports = SetupEventSourceListeners
+module.exports = EventSourceWatcher
