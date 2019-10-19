@@ -37,9 +37,9 @@ const namedMiddleware = {
 
 const Route = use('Route');
 
-Route.get('/stream/:browserfingerprint', ({ source, params : { browserfingerprint } }) => {
+Route.get('/stream/:browserid', ({ source, params : { browserid } }) => {
       source.send({
-        browser_id: browserfingerprint,
+        browser_id: browserid,
         timestamp: Date.now()
       })
 }).middleware(['eventsource']);

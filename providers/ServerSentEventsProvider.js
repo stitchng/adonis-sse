@@ -3,7 +3,6 @@
 const { ServiceProvider } = require('@adonisjs/fold')
 
 class ServerSentEventsProvider extends ServiceProvider {
-  
   /**
    * Registers instance under `Adonis/Addon/Queue`
    * namespace.
@@ -18,9 +17,9 @@ class ServerSentEventsProvider extends ServiceProvider {
     this.app.singleton('Adonis/Addon/Stream', () => {
       const Config = this.app.use('Adonis/Src/Config')
       const Logger = this.app.use('Logger')
-      const EventStream = require('ssenode').EventStream
+      const EventStream = require('server-events-nodejs').EventStream
 
-      let Stream = require('../src/Stream/index.js');
+      let Stream = require('../src/Stream/index.js')
       return new Stream(EventStream, Logger, Config)
     })
 
@@ -36,9 +35,9 @@ class ServerSentEventsProvider extends ServiceProvider {
    */
   register () {
     this._registerEventStream()
-    
+
     this.app.bind('Adonis/Middleware/EventSourceWatcher', (app) => {
-      let EventSourceWatcher = require('../src/Stream/Middleware/EventSourceWatcher')
+      let EventSourceWatcher = require('../src/Stream/Middleware/EventSourceWatcher.js')
       return new EventSourceWatcher(this.app.use('Adonis/Addon/Stream'))
     })
   }
@@ -58,12 +57,12 @@ class ServerSentEventsProvider extends ServiceProvider {
      * instance...
      */
     HttpContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [HTTP]
-      const Source = require('ssenode').Source
-      
-      if((this.request.header('Accept') || "").indexOf('text/event-stream') > -1){
-          return new Source(require('uuid/v4'))
-      }else{
-          return {send:function(){}}
+      const Source = require('server-events-nodejs').Source
+
+      if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
+        return new Source(require('cuid'))
+      } else {
+        return { send: function () {} }
       }
     }, true)
 
@@ -76,12 +75,12 @@ class ServerSentEventsProvider extends ServiceProvider {
     try {
       const WsContext = this.app.use('Adonis/Addons/WsContext')
       WsContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [WS]
-        let Source = require('ssenode').Source
-      
-        if((this.request.header('Accept') || "").indexOf('text/event-stream') > -1){
-          return new Source(require('uuid/v4'))
-        }else{
-          return {send:function(){}}
+        let Source = require('server-events-nodejs').Source
+
+        if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
+          return new Source(require('cuid'))
+        } else {
+          return { send: function () {} }
         }
       }, true)
     } catch (error) {}
