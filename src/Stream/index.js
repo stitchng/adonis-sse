@@ -19,7 +19,7 @@ class Stream {
   }
 
   setup (source, optionsOverride = {}) {
-    this.options.pad_for_ie = optionsOverride.is_ie_req;
+    this.options.pad_for_ie = optionsOverride.is_ie_req
     return this.init(source, this.options)
   }
 }
