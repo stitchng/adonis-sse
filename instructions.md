@@ -31,21 +31,6 @@ const namedMiddleware = {
 
 ```
 
->And use it in any of your routes inside `start/routes.js` file.
-
-```js
-
-const Route = use('Route');
-
-Route.get('/stream/:browserid', ({ source, params : { browserid } }) => {
-      source.send({
-        browser_id: browserid,
-        timestamp: Date.now()
-      })
-}).middleware(['eventsource']);
-
-```
-
 ## Config
 
 The configuration is saved inside `config/sse.js` file. Tweak it accordingly.

@@ -60,7 +60,7 @@ class ServerSentEventsProvider extends ServiceProvider {
       const Source = require('server-events-nodejs').Source
 
       if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
-        return new Source(require('cuid'))
+        return new Source(require('uuid/v4'))
       } else {
         return { send: function () {} }
       }
@@ -78,7 +78,7 @@ class ServerSentEventsProvider extends ServiceProvider {
         let Source = require('server-events-nodejs').Source
 
         if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
-          return new Source(require('cuid'))
+          return new Source(require('uuid/v4'))
         } else {
           return { send: function () {} }
         }

@@ -6,8 +6,8 @@ class Stream {
     this._init = EventStream.init
 
     this.options = {
-      pad_for_ie: Config.get('sse.pad_for_ie'),
-      no_ids: false,
+      pad_for_ie: false,
+      no_ids: Config.get('sse.no_ids'),
       compress_output: Config.get('sse.compress_output'),
       prefer_event_name: Config.get('sse.prefer_event_name'),
       prefered_event_name: Config.get('sse.prefered_event_name')
@@ -18,7 +18,8 @@ class Stream {
     this.prototype._logger = newLogger
   }
 
-  setup (source) {
+  setup (source, optionsOverride = {}) {
+    this.options.pad_for_ie = optionsOverride.is_ie_req;
     return this.init(source, this.options)
   }
 }
