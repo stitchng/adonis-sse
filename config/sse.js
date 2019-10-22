@@ -8,7 +8,7 @@ module.exports = {
 
   compress_output: false, // compress text output for server-sent events HTTP entity body / payload
 
-  prefer_event_name: false, //
+  prefer_event_name: false, // include `prefered_event_name` in server-sent events HTTP entity body / payload
 
   prefered_event_name: 'broadcast'
 

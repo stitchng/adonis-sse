@@ -4,17 +4,17 @@ const { ServiceProvider } = require('@adonisjs/fold')
 
 class ServerSentEventsProvider extends ServiceProvider {
   /**
-   * Registers instance under `Adonis/Addon/Queue`
+   * Registers instance under `Adonis/Addon/Stream`
    * namespace.
    *
-   * @method _registerStream
+   * @method _registerEventStream
    *
    * @return {void}
    *
    * @private
    */
   _registerEventStream () {
-    this.app.singleton('Adonis/Addon/Stream', () => {
+    this.app.singleton('Adonis/Addon/EventStream', () => {
       const Config = this.app.use('Adonis/Src/Config')
       const Logger = this.app.use('Logger')
       const EventStream = require('server-events-nodejs').EventStream
@@ -23,7 +23,29 @@ class ServerSentEventsProvider extends ServiceProvider {
       return new Stream(EventStream, Logger, Config)
     })
 
-    this.app.alias('Adonis/Addon/Stream', 'Stream')
+    this.app.alias('Adonis/Addon/EventStream', 'Stream')
+  }
+
+  /**
+   * Registers instance under `Adonis/Src/EventSource`
+   * namespace.
+   *
+   * @method _registerEventSource
+   *
+   * @return {void}
+   *
+   * @private
+   *
+   *
+   */
+
+  _registerEventSource () {
+    this.app.bind('Adonis/Src/EventSource', () => {
+      const Source = require('server-events-nodejs').Source
+      return new Source(require('uuid/v4'))
+    })
+
+    this.app.alias('Adonis/Src/EventSource', 'Source')
   }
 
   /**
@@ -35,10 +57,11 @@ class ServerSentEventsProvider extends ServiceProvider {
    */
   register () {
     this._registerEventStream()
+    this._registerEventSource()
 
     this.app.bind('Adonis/Middleware/EventSourceWatcher', (app) => {
       let EventSourceWatcher = require('../src/Stream/Middleware/EventSourceWatcher.js')
-      return new EventSourceWatcher(this.app.use('Adonis/Addon/Stream'))
+      return new EventSourceWatcher(this.app.use('Adonis/Addon/EventStream'))
     })
   }
 
@@ -51,16 +74,14 @@ class ServerSentEventsProvider extends ServiceProvider {
    */
   boot () {
     const HttpContext = this.app.use('Adonis/Src/HttpContext')
-
+    const source = this.app.use('Adonis/Src/EventSource')
     /**
      * Adding getter to the HTTP context. Please note the queue
      * instance...
      */
     HttpContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [HTTP]
-      const Source = require('server-events-nodejs').Source
-
       if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
-        return new Source(require('uuid/v4'))
+        return source
       } else {
         return { send: function () {} }
       }
@@ -75,10 +96,8 @@ class ServerSentEventsProvider extends ServiceProvider {
     try {
       const WsContext = this.app.use('Adonis/Addons/WsContext')
       WsContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [WS]
-        let Source = require('server-events-nodejs').Source
-
         if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
-          return new Source(require('uuid/v4'))
+          return source
         } else {
           return { send: function () {} }
         }

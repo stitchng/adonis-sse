@@ -36,8 +36,11 @@ Route.post('/send/email', 'NotificationsController.sendEmail')
 
 See the [_instructions.md_](https://github.com/stitchng/adonis-sse/blob/master/instructions.md) file for the complete installation steps and follow as stated.
 
+>HINT: It would be much easier and better to make the `EventSourceWatcher` middleware a global middleware
 
-## More examples
+## Example(s)
+
+>Setup a controller to dispatch server-sent events to the browser using the `source.send()` method like so:
 
 ```js
 
@@ -49,7 +52,7 @@ class NotificationsController {
     async sendEmail ({ request, auth, source }){
 
         let input = request.only([
-            'user_id'
+            'ticket_user_id'
         ]);
 
         let { id, email, fullname } = await auth.getUser();
@@ -61,19 +64,20 @@ class NotificationsController {
                 'emails.template', 
                 { fullname }, (message) => {
 				message.to(email) 
-				message.from('jobstatus@app.com') 
-				message.subject('Execution Job Status')
+				message.from('crm.tickets@funsignals.co') 
+				message.subject('Ticket Creation Job Status')
             })
             
 		}catch(err){
             
-			error = true
+            error = true
+            
 		}finally{
 
             source.send({
-                sender: id,
-                reciever: input.user_id,
-                mail_status: `email sent ${error ? 'un' : ''}successfuly`
+                ticket_reciever: id,
+                ticket_creator: input.ticket_user_id,
+                ticket_mail_status: `email sent ${error ? 'un' : ''}successfuly`
             }, null, 'update')
 			
         }

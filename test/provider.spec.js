@@ -34,11 +34,16 @@ test.group('AdonisJS Sse Test(s)', (group) => {
 
     ioc.singleton('Adonis/Src/HttpContext', () => {
       return {
-        request: {},
+        request: {
+          header: function (_key, _default) {
+            return this.headers[_key] || _default
+          },
+          headers: { 'Accept': 'text/event-stream' }
+        },
         response: {},
         params: {},
         getter (name, callback) {
-          this[name] = callback()
+          this[name] = callback.call(this)
         }
       }
     })
@@ -48,6 +53,8 @@ test.group('AdonisJS Sse Test(s)', (group) => {
     let provider = new ServerSentEventsProvider(ioc)
     provider.register()
 
-    assert.instanceOf(ioc.use('Adonis/Addon/Stream'), Stream)
+    assert.instanceOf(ioc.use('Adonis/Addon/EventStream'), Stream)
+    assert.instanceOf(ioc.use('Adonis/Src/EventSource'), require('server-events-nodejs').Source)
+    // assert.instanceOf(ioc.use('Adonis/Src/HttpContext').source, require('server-events-nodejs').Source)
   })
 })
