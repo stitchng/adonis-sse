@@ -25,7 +25,7 @@ const Route = use('Route');
 
 Route.get('/stream', ({ source }) => {
       // send a server-sent events comment
-      source.send(null, '!This is a comment!');
+      source.send("Hello AdonisJS", '!This is a comment!');
 })//.middleware(['eventsource']);
 
 Route.post('/send/email', 'NotificationsController.sendEmail')
@@ -85,6 +85,26 @@ class NotificationsController {
 }
 
 module.exports = NotificationsController		
+```
+## Connecting from the client-side
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!-- Polyfill for older browsers without native support for the HTML5 EventSource API. -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=EventSource"></script>
+  </head>
+  <body>
+     <script>
+	     let stream = new EventSource("http://127.0.0.1:3333/stream");
+	     stream.onmessage = function(e){
+                 console.log("Data: ", e.data);
+	     };
+     </script>
+  </body>
+</html>
 ```
 
 ## License
