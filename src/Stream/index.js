@@ -20,7 +20,7 @@ class Stream {
 
   setup (source, optionsOverride = {}) {
     this.options.pad_for_ie = optionsOverride.is_ie_req
-    return this._init(source, this.options)
+    return this._init.call(EventStream, source, this.options);
   }
 }
 
