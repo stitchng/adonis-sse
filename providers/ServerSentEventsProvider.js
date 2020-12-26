@@ -81,7 +81,7 @@ class ServerSentEventsProvider extends ServiceProvider {
      * instance...
      */
     HttpContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [HTTP]
-      if ((this.request.header('Accept', '')).indexOf('text/event-stream') > -1) {
+      if (this.request.method().toLowerCase() === 'get') {
         return source
       } else {
         return { send: function () {} }
