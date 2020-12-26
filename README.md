@@ -18,6 +18,8 @@ An addon/plugin package to provide server-sent events functionality for AdonisJS
 
 >Firstly, follow the instructions in `instructions.md` file to setup the *Provider* and *Middleware*
 
+See the [_instructions.md_](https://github.com/stitchng/adonis-sse/blob/master/instructions.md) file for the complete installation steps and follow as stated.
+
 ### Registering provider
 
 Like any other provider, you need to register the provider inside `start/app.js` file.
@@ -60,23 +62,31 @@ const namedMiddleware = {
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route');
 
+/**
+ * If the 'eventsource' named middleware is set
+ * then setup route like below
+ */
 Route.get('/stream', ({ source }) => {
       // send a server-sent events comment
       source.send("Hello AdonisJS", '!This is a comment!');
 }).middleware(['eventsource']);
 
+/**
+ * If the middleware is a global middlware
+ * then setup route like below
+ */
+Route.get('/stream', ({ source }) => {
+      // send a server-sent events comment
+      source.send("Hello AdonisJS", '!This is a comment!');
+})
+
 Route.post('/send/email', 'NotificationsController.sendEmail')
 
 ```
 
-## Installation Instructions
+## Example(s)
 
-See the [_instructions.md_](https://github.com/stitchng/adonis-sse/blob/master/instructions.md) file for the complete installation steps and follow as stated.
-
-
-### Example(s)
-
->Setup a controller to dispatch server-sent events to the browser using the `source.send()` method like so:
+>Setup a controller to dispatch server-sent events to the browser using the `source.send(data: Object, comment: String, event: String, retry: Number)` method like so:
 
 ```js
 
@@ -114,7 +124,7 @@ class NotificationsController {
                 ticket_reciever: id,
                 ticket_creator: input.ticket_user_id,
                 ticket_mail_status: `email sent ${error ? 'un' : ''}successfuly`
-            }, null, 'update', )
+            }, null, 'update', 4000) // event: 'update', retry: 4000 (4 seconds)
 			
         }
     }
@@ -144,11 +154,24 @@ send( data: object, comment: string, event: string, retry: number );
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=EventSource"></script>
   </head>
   <body>
-     <script>
-	     let stream = new EventSource("http://127.0.0.1:3333/stream");
-	     stream.onmessage = function(e){
+     <script id="server-side-events" type="text/javascript">
+	     const stream = new EventSource("http://127.0.0.1:3333/stream");
+	     
+	     stream.addEventListener('message', function(e){
                  console.log("Data: ", e.data);
-	     };
+	     }, false);
+	     
+	     stream.addEventListener('open', function(e) {
+		// Connection was opened.
+	        console.log('connection open: true');
+	     }, false);
+
+	     stream.addEventListener('error', function(e) {
+		  if (e.readyState == EventSource.CLOSED) {
+		    // Connection was closed.
+	            console.log('connection closed: true');
+		  }
+	     }, false);
      </script>
   </body>
 </html>
