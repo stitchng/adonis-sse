@@ -16,7 +16,44 @@ An addon/plugin package to provide server-sent events functionality for AdonisJS
 
 ## Usage
 
-Setup serve-sent events route inside `start/routes.js` file.
+>Firstly, follow the instructions in `instructions.md` file to setup the *Provider* and *Middleware*
+
+### Registering provider
+
+Like any other provider, you need to register the provider inside `start/app.js` file.
+
+```js
+const providers = [
+  ...
+  'adonisjs-sse/providers/ServerSentEventsProvider',
+]
+```
+### Registering middleware
+
+Register the following middleware inside `start/kernel.js` file. 
+
+>You can optionally place the sse middleware after the 'Adonis/Middleware/AuthInit' middleware
+
+```js
+const globalMiddleware = [
+  ...
+  'Adonis/Middleware/AuthInit',
+  'Adonis/Middleware/EventSourceWatcher'
+]
+```
+>Or alternatively setup the middleware as a named (use any name you feel like) middleware inside `start/kernel.js` file.
+
+```js
+
+const namedMiddleware = {
+  eventsource: 'Adonis/Middleware/EventSourceWatcher'
+}
+
+```
+
+*HINT: It would be much easier and better to make the `EventSourceWatcher` middleware a global middleware*
+
+>Setup serve-sent events route inside `start/routes.js` file.
 
 ```js
 
@@ -26,7 +63,7 @@ const Route = use('Route');
 Route.get('/stream', ({ source }) => {
       // send a server-sent events comment
       source.send("Hello AdonisJS", '!This is a comment!');
-})//.middleware(['eventsource']);
+}).middleware(['eventsource']);
 
 Route.post('/send/email', 'NotificationsController.sendEmail')
 
@@ -36,9 +73,8 @@ Route.post('/send/email', 'NotificationsController.sendEmail')
 
 See the [_instructions.md_](https://github.com/stitchng/adonis-sse/blob/master/instructions.md) file for the complete installation steps and follow as stated.
 
->HINT: It would be much easier and better to make the `EventSourceWatcher` middleware a global middleware
 
-## Example(s)
+### Example(s)
 
 >Setup a controller to dispatch server-sent events to the browser using the `source.send()` method like so:
 
@@ -78,7 +114,7 @@ class NotificationsController {
                 ticket_reciever: id,
                 ticket_creator: input.ticket_user_id,
                 ticket_mail_status: `email sent ${error ? 'un' : ''}successfuly`
-            }, null, 'update')
+            }, null, 'update', )
 			
         }
     }
@@ -86,6 +122,17 @@ class NotificationsController {
 
 module.exports = NotificationsController		
 ```
+
+```typescript
+
+/**
+ * source.send (METHOD)
+ */
+
+send( data: object, comment: string, event: string, retry: number );
+
+```
+
 ## Connecting from the client-side
 
 ```html
