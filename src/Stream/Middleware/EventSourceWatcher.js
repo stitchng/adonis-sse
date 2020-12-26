@@ -12,8 +12,7 @@ class EventSourceWatcher {
       let isIE = (request.hasHeader('ua-cpu') || ((request.header('User-Agent', 'unknown')).match(/Trident [\d]{1}/g) !== null))
 
       middlewareFunc = this.stream.setup(source, {
-        is_ie_req: isIE,
-        pad_for_ie: isIE
+        is_ie_req: isIE
       })
     } catch (err) {
       middlewareFunc = (req, res, nex) => nex()
