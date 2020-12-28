@@ -41,9 +41,8 @@ class ServerSentEventsProvider extends ServiceProvider {
 
   _registerEventSource () {
     this.app.bind('Adonis/Src/EventSource', () => {
-      const Config = this.app.use('Adonis/Src/Config');
       const Source = require('server-events-nodejs').Source
-      return new Source(require('uuid/v4'));
+      return new Source(require('uuid/v4'))
     })
 
     this.app.alias('Adonis/Src/EventSource', 'Source')

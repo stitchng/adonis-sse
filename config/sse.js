@@ -1,15 +1,60 @@
 'use strict'
 
-// const Env = use('Env')
+const Env = use('Env')
 
 module.exports = {
+  /*!
+   |--------------------------------------------------
+   | No IDs
+   |--------------------------------------------------
+   |
+   | Whether id: field should be included
+   | for the text-stream response
+   |
+   | flag to determine if server-sent events should
+   | contain the 'id: xxxx' line
+   |
+   */
+  no_ids: false,
 
-  no_ids: false, // server-sent events should contain the 'id: xxxx' line
+  /*!
+   |--------------------------------------------------
+   | Compress Output
+   |--------------------------------------------------
+   |
+   | Whether the text-stream response should compressed
+   | using HTTP compression
+   |
+   | compress text output for server-sent events
+   | HTTP entity body / payload
+   |
+   */
+  compress_output: false,
 
-  compress_output: false, // compress text output for server-sent events HTTP entity body / payload
+  /*!
+   |--------------------------------------------------
+   | Prefer Event Name
+   |--------------------------------------------------
+   |
+   | Whether the event: field should be included
+   | for the text-stream response
+   |
+   | flag to determine if the `prefered_event_name`
+   | should be in server-sent events
+   | HTTP entity body / payload
+   |
+   */
+  prefer_event_name: false,
 
-  prefer_event_name: false, // include `prefered_event_name` in server-sent events HTTP entity body / payload
-
-  prefered_event_name: 'broadcast'
+  /*!
+   |--------------------------------------------------
+   | Prefered Event Name
+   |--------------------------------------------------
+   |
+   | default event name: 'braodcast'
+   |
+   |
+   */
+  prefered_event_name: Env.get('SSE_PREFERED_EVENT_NAME', 'broadcast')
 
 }

@@ -3,7 +3,7 @@
 class Stream {
   constructor (EventStream, Logger, Config) {
     this._logger = Logger
-    this._init = EventStream.init.bind(EventStream);
+    this._init = EventStream.init.bind(EventStream)
 
     this.options = {
       // pad_for_ie: false,
@@ -20,7 +20,7 @@ class Stream {
 
   setup (source, optionsOverride = {}) {
     this.options.pad_for_ie = optionsOverride.is_ie_req
-    return this._init(source, this.options);
+    return this._init(source, this.options)
   }
 }
 
