@@ -41,8 +41,9 @@ class ServerSentEventsProvider extends ServiceProvider {
 
   _registerEventSource () {
     this.app.bind('Adonis/Src/EventSource', () => {
+      const Config = this.app.use('Adonis/Src/Config');
       const Source = require('server-events-nodejs').Source
-      return new Source(require('uuid/v4'))
+      return new Source(require('uuid/v4'));
     })
 
     this.app.alias('Adonis/Src/EventSource', 'Source')
@@ -80,7 +81,7 @@ class ServerSentEventsProvider extends ServiceProvider {
      * instance...
      */
     HttpContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [HTTP]
-      if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
+      if (this.request.method().toLowerCase() === 'get') {
         return source
       } else {
         return { send: function () {} }
@@ -96,7 +97,7 @@ class ServerSentEventsProvider extends ServiceProvider {
     try {
       const WsContext = this.app.use('Adonis/Addons/WsContext')
       WsContext.getter('source', function () { // A NEW SOURCE INSTANCE ON EVERY REQUEST [WS]
-        if ((this.request.header('Accept') || '').indexOf('text/event-stream') > -1) {
+        if ((this.request.header('Accept', '')).indexOf('text/event-stream') > -1) {
           return source
         } else {
           return { send: function () {} }
